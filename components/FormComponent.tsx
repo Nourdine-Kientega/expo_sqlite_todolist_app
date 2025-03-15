@@ -16,6 +16,7 @@ const FormComponent = ({ onAdd }: FormComponentProps) => {
     const handleSubmit = async () => {
 
         todo !== '' && await addTodo(todo);
+
         onAdd();
         setTodo('');
     }
@@ -38,6 +39,8 @@ const FormComponent = ({ onAdd }: FormComponentProps) => {
 
 const styles = StyleSheet.create({
     form: {
+        position: 'absolute',
+        bottom: 0,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',

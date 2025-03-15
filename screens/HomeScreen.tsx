@@ -6,11 +6,12 @@ import { getALLTodos } from '@/db/database';
 
 interface Todo {
     id: number;
+    is_completed: number;
     content: string;
 }
 
 const HomeScreen = () => {
-    
+
 
     const [todos, setTodos] = useState<Todo[]>([]);
 
@@ -21,47 +22,58 @@ const HomeScreen = () => {
 
     useEffect(() => {
         handleFetchTodos();
-    }, []); 
+    }, []);
 
     useEffect(() => {
         // console.log('todo', todos);  // Log updated todos
     }, [todos]);
 
-  return (  
-    <View style={styles.container}>
-        <StatusBar backgroundColor={'#f1f1f1'} barStyle={'dark-content'} />
-        <Text style={styles.title}>Liste des tâches</Text>
+    return (
+        <View style={styles.container}>
+            <StatusBar backgroundColor={'#f1f1f1'} barStyle={'dark-content'} />
+            <Text style={styles.title}>Liste des tâches</Text>
 
-        {/* Todos flatlist  */}
-        <FlatList 
-            // onRemove={handleFetchTodos}
-            contentContainerStyle={styles.flatlistContentContainer}
-            data={todos} 
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({item}) => (
-            <TodoComponent {...item} onRemove={handleFetchTodos} />
-            )}
-        />
+            {/* Todos flatlist  */}
+            <FlatList
+                style={styles.flatlist}
+                contentContainerStyle={styles.flatlistContentContainer}
+                data={todos}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <TodoComponent {...item} onRemove={handleFetchTodos} />
+                )}
+            />
 
-        {/* Form */}
-        <FormComponent onAdd={handleFetchTodos} />
-    </View>
-  )
+
+
+            {/* Form */}
+            <FormComponent onAdd={handleFetchTodos} />
+        </View>
+    )
 };
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
+        flex: 1,
     },
     title: {
-      fontSize: 32,
-      marginTop: 80,
-      marginBottom: 10,
-      textAlign: 'center',
+        fontSize: 32,
+        marginTop: 80,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    flatlist: {
+        marginBottom: 80,
     },
     flatlistContentContainer: {
-      paddingVertical: 5,
+        paddingTop: 5,
+        paddingBottom: 35,
     },
+    emptyScreen: {
+        marginTop: 250,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });
 
 export default HomeScreen;

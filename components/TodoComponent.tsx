@@ -1,24 +1,42 @@
-import { removeTodo } from '@/db/database';
+import { getALLTodos, removeTodo, updateTodo } from '@/db/database';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 interface TodoProps {
     id: number;
+    is_completed: number;
     content: string;
     onRemove: () => void;
 }
 
-const TodoComponent = ({ id, content, onRemove }: TodoProps) => {
+const TodoComponent = ({ id, content, is_completed, onRemove }: TodoProps) => {
 
-    const [checkedTodo, setCheckedTodo] = useState(false);
+    const [checkedTodo, setCheckedTodo] = useState<boolean>(is_completed === 1);
 
     const handleRemoveTodo = async () => {
 
-        await removeTodo(id);
+        await removeTodo(id); 
         onRemove();
     };
 
+    
+    const handleCheckedTodo = async () => {
+
+        const newCheckedState = !checkedTodo; // Toggle the state
+
+        setCheckedTodo(newCheckedState);
+        await updateTodo(id, newCheckedState ? 1 : 0);
+        onRemove();
+
+    };
+
+    useEffect(() => {
+        // If the `is_completed` prop changes, sync it with the state
+        setCheckedTodo(is_completed === 1);
+    }, [is_completed]);
+
+    
     return (
         <View style={styles.todo}>
             <Text style={styles.todoText}>{content}</Text>
@@ -27,7 +45,7 @@ const TodoComponent = ({ id, content, onRemove }: TodoProps) => {
                     <Ionicons size={18} name='trash' color={'red'} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => setCheckedTodo(!checkedTodo)}>
+                <TouchableOpacity onPress={handleCheckedTodo}>
                     <Ionicons size={18} name={checkedTodo ? 'checkmark-circle' : 'radio-button-off'} color={'blue'} />
                 </TouchableOpacity>
             </View>

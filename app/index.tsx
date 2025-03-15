@@ -6,7 +6,7 @@ export default function Index() {
 
   useEffect(() => {
 
-    initializeDB();
+    initializeDB(); 
   }, []);
 
   return (
